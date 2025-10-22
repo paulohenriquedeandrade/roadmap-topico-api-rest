@@ -6,6 +6,8 @@ import { specs } from './swagger/swagger.js';
 import swaggerUi from 'swagger-ui-express';
 import selecoesV1 from './routes/v1/selecoes.js';
 import selecoesV2 from './routes/v2/selecoes.js';
+import selecoesV3 from './routes/v3/selecoes.js';
+import jogadoresV3 from './routes/v3/jogadores.js';
 
 const app = express();
 
@@ -15,6 +17,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use('/v1/selecoes', selecoesV1);
 app.use('/v2/selecoes', selecoesV2);
+app.use('/v3/selecoes', selecoesV3);
+app.use('/v3/jogadores', jogadoresV3);
 
 app.get("/", (req, res) => {
     res.send("Olá, mundo!");
