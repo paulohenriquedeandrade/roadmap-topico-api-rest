@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { CreateJogador, UpdateJogador } from "../types/jogador.types.js";
 import jogadorService from "../services/jogadorService.js";
+import { NotFoundError } from "../errors/NotFoundError.js";
 
 export const listarTodos = async (req: Request, res: Response) => {
   try {
@@ -17,12 +18,11 @@ export const buscarPorId = async (req: Request, res: Response) => {
     const { id } = req.params;
     const jogador = await jogadorService.buscarPorId(Number(id));
 
-    if (!jogador) {
-      return res.status(404).json({ error: "Jogador não encontrado" });
-    }
-
     res.status(200).json(jogador);
   } catch (error) {
+    if (error instanceof NotFoundError) {
+      return res.status(404).json({ error: error.message });
+    }
     res.status(500).json({ error: "Erro ao buscar jogador" });
   }
 };
@@ -58,12 +58,11 @@ export const atualizar = async (req: Request, res: Response) => {
       selecaoId,
     });
 
-    if (!jogador) {
-      return res.status(404).json({ error: "Jogador não encontrado" });
-    }
-
     res.status(200).json(jogador);
   } catch (error) {
+    if (error instanceof NotFoundError) {
+      return res.status(404).json({ error: error.message });
+    }
     res.status(500).json({ error: "Erro ao atualizar jogador" });
   }
 };
@@ -74,12 +73,11 @@ export const deletar = async (req: Request, res: Response) => {
 
     const jogador = await jogadorService.deletar(Number(id));
 
-    if (!jogador) {
-      return res.status(404).json({ error: "Jogador não encontrado" });
-    }
-
     res.status(200).json(jogador);
   } catch (error) {
+    if (error instanceof NotFoundError) {
+      return res.status(404).json({ error: error.message });
+    }
     res.status(500).json({ error: "Erro ao deletar jogador" });
   }
 };

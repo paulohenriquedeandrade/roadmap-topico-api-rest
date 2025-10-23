@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { CreateSelecao, UpdateSelecao } from "../types/selecao.types.js";
 import selecaoService from "../services/selecaoService.js";
+import { NotFoundError } from "../errors/NotFoundError.js";
 
 export const listarTodas = async (req: Request, res: Response) => {
   try {
@@ -17,12 +18,11 @@ export const buscarPorId = async (req: Request, res: Response) => {
     const { id } = req.params;
     const selecao = await selecaoService.buscarPorId(Number(id));
 
-    if (!selecao) {
-      return res.status(404).json({ error: "Seleção não encontrada" });
-    }
-
     res.status(200).json(selecao);
   } catch (error) {
+    if (error instanceof NotFoundError) {
+      return res.status(404).json({ error: error.message });
+    }
     res.status(500).json({ error: "Erro ao buscar seleção" });
   }
 };
@@ -54,12 +54,11 @@ export const atualizar = async (req: Request, res: Response) => {
       titulos,
     });
 
-    if (!selecao) {
-      return res.status(404).json({ error: "Seleção não encontrada" });
-    }
-
     res.status(200).json(selecao);
   } catch (error) {
+    if (error instanceof NotFoundError) {
+      return res.status(404).json({ error: error.message });
+    }
     res.status(500).json({ error: "Erro ao atualizar seleção" });
   }
 };
@@ -70,12 +69,11 @@ export const deletar = async (req: Request, res: Response) => {
 
     const selecao = await selecaoService.deletar(Number(id));
 
-    if (!selecao) {
-      return res.status(404).json({ error: "Seleção não encontrada" });
-    }
-
     res.status(200).json({ message: "Seleção deletada com sucesso" });
   } catch (error) {
+    if (error instanceof NotFoundError) {
+      return res.status(404).json({ error: error.message });
+    }
     res.status(500).json({ error: "Erro ao deletar seleção" });
   }
 };
