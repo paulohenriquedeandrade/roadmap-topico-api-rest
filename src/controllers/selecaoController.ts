@@ -1,10 +1,10 @@
-import { prisma } from "../config/database.js";
 import { Request, Response } from "express";
 import { CreateSelecao, UpdateSelecao } from "../types/selecao.types.js";
+import selecaoService from "../services/selecaoService.js";
 
 export const listarTodas = async (req: Request, res: Response) => {
   try {
-    const selecoes = await prisma.selecao.findMany();
+    const selecoes = await selecaoService.listarTodas();
 
     res.status(200).json(selecoes);
   } catch (error) {
@@ -15,9 +15,7 @@ export const listarTodas = async (req: Request, res: Response) => {
 export const buscarPorId = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const selecao = await prisma.selecao.findUnique({
-      where: { id: Number(id) },
-    });
+    const selecao = await selecaoService.buscarPorId(Number(id));
 
     if (!selecao) {
       return res.status(404).json({ error: "Seleção não encontrada" });
@@ -33,8 +31,10 @@ export const criar = async (req: Request, res: Response) => {
   try {
     const { nome, grupo, titulos } = req.body as CreateSelecao;
 
-    const selecao = await prisma.selecao.create({
-      data: { nome, grupo, titulos },
+    const selecao = await selecaoService.criar({
+      nome,
+      grupo,
+      titulos,
     });
 
     res.status(201).json(selecao);
@@ -48,9 +48,10 @@ export const atualizar = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { nome, grupo, titulos } = req.body as UpdateSelecao;
 
-    const selecao = await prisma.selecao.update({
-      where: { id: Number(id) },
-      data: { nome, grupo, titulos },
+    const selecao = await selecaoService.atualizar(Number(id), {
+      nome,
+      grupo,
+      titulos,
     });
 
     if (!selecao) {
@@ -67,9 +68,7 @@ export const deletar = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    const selecao = await prisma.selecao.delete({
-      where: { id: Number(id) },
-    });
+    const selecao = await selecaoService.deletar(Number(id));
 
     if (!selecao) {
       return res.status(404).json({ error: "Seleção não encontrada" });

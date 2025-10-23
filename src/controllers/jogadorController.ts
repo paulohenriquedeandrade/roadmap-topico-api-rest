@@ -1,12 +1,10 @@
-import { prisma } from "../config/database.js";
 import { Request, Response } from "express";
 import { CreateJogador, UpdateJogador } from "../types/jogador.types.js";
+import jogadorService from "../services/jogadorService.js";
 
 export const listarTodos = async (req: Request, res: Response) => {
   try {
-    const jogadores = await prisma.jogador.findMany({
-      include: { selecao: true },
-    });
+    const jogadores = await jogadorService.listarTodos();
 
     res.status(200).json(jogadores);
   } catch (error) {
@@ -17,10 +15,7 @@ export const listarTodos = async (req: Request, res: Response) => {
 export const buscarPorId = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const jogador = await prisma.jogador.findUnique({
-      where: { id: Number(id) },
-      include: { selecao: true },
-    });
+    const jogador = await jogadorService.buscarPorId(Number(id));
 
     if (!jogador) {
       return res.status(404).json({ error: "Jogador não encontrado" });
@@ -37,13 +32,11 @@ export const criar = async (req: Request, res: Response) => {
     const { nome, posicao, numeroCamisa, selecaoId } =
       req.body as CreateJogador;
 
-    const jogador = await prisma.jogador.create({
-      data: {
-        nome,
-        posicao,
-        numeroCamisa,
-        selecao: { connect: { id: selecaoId } },
-      },
+    const jogador = await jogadorService.criar({
+      nome,
+      posicao,
+      numeroCamisa,
+      selecaoId,
     });
 
     res.status(201).json(jogador);
@@ -58,14 +51,11 @@ export const atualizar = async (req: Request, res: Response) => {
     const { nome, posicao, numeroCamisa, selecaoId } =
       req.body as UpdateJogador;
 
-    const jogador = await prisma.jogador.update({
-      where: { id: Number(id) },
-      data: {
-        nome,
-        posicao,
-        numeroCamisa,
-        selecao: { connect: { id: selecaoId } },
-      },
+    const jogador = await jogadorService.atualizar(Number(id), {
+      nome,
+      posicao,
+      numeroCamisa,
+      selecaoId,
     });
 
     if (!jogador) {
@@ -82,9 +72,7 @@ export const deletar = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    const jogador = await prisma.jogador.delete({
-      where: { id: Number(id) },
-    });
+    const jogador = await jogadorService.deletar(Number(id));
 
     if (!jogador) {
       return res.status(404).json({ error: "Jogador não encontrado" });
