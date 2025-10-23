@@ -1,5 +1,6 @@
 import jogadorRepository from "../repositories/jogadorRepository.js";
 import { CreateJogador, UpdateJogador } from "../types/jogador.types.js";
+import { NotFoundError } from "../errors/NotFoundError.js";
 
 class JogadorService {
   async listarTodos() {
@@ -7,7 +8,13 @@ class JogadorService {
   }
 
   async buscarPorId(id: number) {
-    return await jogadorRepository.findById(id);
+    const jogador = await jogadorRepository.findById(id);
+
+    if (!jogador) {
+      throw new NotFoundError("Jogador não encontrado");
+    }
+
+    return jogador;
   }
 
   async criar(data: CreateJogador) {
@@ -15,10 +22,14 @@ class JogadorService {
   }
 
   async atualizar(id: number, data: UpdateJogador) {
+    await this.buscarPorId(id);
+
     return await jogadorRepository.update(id, data);
   }
 
   async deletar(id: number) {
+    await this.buscarPorId(id);
+
     return await jogadorRepository.delete(id);
   }
 }
