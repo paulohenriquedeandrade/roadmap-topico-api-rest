@@ -1,14 +1,14 @@
-import express from 'express';
-import { validarSelecoes } from '../../middleware/validarSelecoes.js';
+import express, { Router } from "express";
+import { validarSelecoes } from "../../middleware/validarSelecoes.js";
 
-const selecoesV1 = express.Router();
+const selecoesV1: Router = Router();
 
 // Mock de dados para seleções
 const selecoes = [
-    { id: 1, nome: "Brasil", grupo: "G" },
-    { id: 2, nome: "Suiça", grupo: "G" },
-    { id: 3, nome: "Sérvia", grupo: "G" },
-    { id: 4, nome: "Camarões", grupo: "G" }
+  { id: 1, nome: "Brasil", grupo: "G" },
+  { id: 2, nome: "Suiça", grupo: "G" },
+  { id: 3, nome: "Sérvia", grupo: "G" },
+  { id: 4, nome: "Camarões", grupo: "G" },
 ];
 
 /**
@@ -22,7 +22,7 @@ const selecoes = [
  *        description: Lista de seleções retornada com sucesso.
  */
 selecoesV1.get("/", (req, res) => {
-    res.status(200).send(selecoes);
+  res.status(200).send(selecoes);
 });
 
 /**
@@ -51,8 +51,8 @@ selecoesV1.get("/", (req, res) => {
  *       description: Requisição inválida.
  */
 selecoesV1.post("/", validarSelecoes, (req, res) => {
-    selecoes.push(req.body);
-    res.status(201).send("Seleção adicionada com sucesso!");
+  selecoes.push(req.body);
+  res.status(201).send("Seleção adicionada com sucesso!");
 });
 
 export default selecoesV1;
