@@ -21,6 +21,12 @@ src/
 ├── controllers/
 │   ├── selecaoController.ts
 │   └── jogadorController.ts
+├── services/
+│   ├── selecaoService.ts
+│   └── jogadorService.ts
+├── repositories/
+│   ├── selecaoRepository.ts
+│   └── jogadorRepository.ts
 ├── middlewares/
 │   ├── logger.ts
 │   ├── validarSelecoes.ts
@@ -39,6 +45,8 @@ src/
 │   ├── selecao.types.ts
 │   ├── jogador.types.ts
 │   └── index.ts
+├── errors/
+│   └── NotFoundError.ts
 ├── app.ts
 └── prisma/
     ├── schema.prisma
@@ -48,7 +56,7 @@ server.ts
 
 ## Entregas Implementadas
 
-### Tópico 11: API Express com Rotas e Middlewares
+### Tópico 10: API Express com Rotas e Middlewares
 
 **Rotas GET/POST:**
 
@@ -61,7 +69,7 @@ server.ts
 - Validação - Valida dados do POST antes de processar
 - Tratamento de erros - Captura e trata erros globalmente
 
-### Tópico 12: Documentação e Versionamento
+### Tópico 11: Documentação e Versionamento
 
 **Documentação com Swagger:**
 
@@ -74,6 +82,23 @@ server.ts
 - v1 - Retorna array simples de seleções
 - v2 - Retorna objeto com metadados (total + array)
 - v3 - Integração com banco de dados (Prisma)
+
+### Tópico 13: Banco de Dados SQL
+
+**Esquema implementado no MySQL:**
+
+- Tabela `selecoes` com constraints (PRIMARY KEY, UNIQUE, DEFAULT)
+- Tabela `jogadores` com relacionamento 1:N
+- FOREIGN KEY para integridade referencial
+- CHECK constraints e ENUM para validação
+
+**Queries implementadas:**
+
+- Consultas simples com SELECT
+- Filtros com WHERE
+- Ordenação com ORDER BY
+- JOIN entre tabelas
+- Agregação com COUNT e GROUP BY
 
 ### Tópico 14: CRUD com Prisma
 
@@ -122,6 +147,84 @@ server.ts
 - Autocomplete e IntelliSense
 - Refatoração segura
 - Código autodocumentado
+
+### Tópico 16: Arquitetura MVC
+
+**Implementação de arquitetura em camadas:**
+
+Refatoração completa do projeto para separar responsabilidades em camadas distintas, seguindo o padrão MVC adaptado para APIs REST.
+
+**Estrutura das camadas:**
+
+```
+Controller → Service → Repository → Database (Prisma)
+```
+
+**Controller (Camada de Apresentação):**
+
+- Recebe requisições HTTP
+- Valida entrada básica
+- Chama métodos do Service
+- Retorna respostas HTTP com status apropriado
+- Trata erros específicos (404, 500)
+
+**Service (Camada de Negócio):**
+
+- Contém lógica de negócio
+- Valida regras de domínio
+- Orquestra operações complexas
+- Lança erros customizados (NotFoundError)
+- Reutilizável por múltiplos Controllers
+
+**Repository (Camada de Dados):**
+
+- Encapsula acesso ao banco de dados
+- Abstrai operações do Prisma
+- Métodos: findAll, findById, create, update, delete
+- Sem lógica de negócio
+
+**Benefícios da arquitetura:**
+
+1. **Separação de Responsabilidades:** Cada camada tem um propósito específico e bem definido
+
+2. **Testabilidade:** Camadas podem ser testadas isoladamente com mocks
+
+3. **Manutenibilidade:** Mudanças localizadas (trocar banco afeta apenas Repository)
+
+4. **Reutilização:** Services podem ser compartilhados entre Controllers
+
+5. **Escalabilidade:** Estrutura preparada para crescimento do projeto
+
+**Exemplo de fluxo de requisição:**
+
+```
+GET /v3/selecoes/1
+
+1. Controller recebe requisição
+   - Extrai id dos params
+   - Chama selecaoService.buscarPorId(1)
+
+2. Service processa
+   - Chama selecaoRepository.findById(1)
+   - Valida se existe
+   - Se não: lança NotFoundError
+   - Se sim: retorna seleção
+
+3. Repository executa
+   - Chama prisma.selecao.findUnique()
+   - Retorna resultado do banco
+
+4. Controller retorna
+   - Status 200 + JSON (sucesso)
+   - Status 404 + erro (não encontrado)
+   - Status 500 + erro (erro servidor)
+```
+
+**Tratamento de erros:**
+
+- Classe `NotFoundError` customizada
+- Validações centralizadas nos Services
+- Controllers capturam e retornam status HTTP correto
 
 ## Schema do Banco de Dados
 
@@ -288,6 +391,6 @@ A API mantém três versões simultâneas:
 
 - **v1:** Implementação inicial com dados em memória
 - **v2:** Versão com formato de resposta aprimorado
-- **v3:** Versão com persistência em banco de dados
+- **v3:** Versão com persistência em banco de dados e arquitetura MVC completa
 
 Isso permite retrocompatibilidade e migração gradual de clientes.
