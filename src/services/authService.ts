@@ -6,7 +6,11 @@ import {
   AuthResponse,
   TokenPayload,
 } from "../types/auth.types.js";
-import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  verifyRefreshToken,
+} from "../utils/jwt.js";
 
 class AuthService {
   async register(data: RegisterInput): Promise<AuthResponse> {
@@ -65,6 +69,23 @@ class AuthService {
         name: user.name,
       },
     };
+  }
+
+  async refreshAccessToken(token: string): Promise<{ accessToken: string }> {
+    const decoded = verifyRefreshToken(token);
+    if (!decoded) {
+      throw new Error("Invalid refresh token.");
+    }
+
+    const user = await userRepository.findById(decoded.userId);
+    if (!user || user.refreshToken !== token) {
+      throw new Error("Invalid refresh token.");
+    }
+
+    const payload: TokenPayload = { userId: user.id, email: user.email };
+    const accessToken = generateAccessToken(payload);
+
+    return { accessToken };
   }
 }
 
