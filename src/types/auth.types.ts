@@ -10,7 +10,7 @@ export interface LoginInput {
 }
 
 export interface TokenPayload {
-  userId: string;
+  userId: number;
   email: string;
 }
 
