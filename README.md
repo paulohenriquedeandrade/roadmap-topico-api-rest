@@ -12,7 +12,56 @@ API RESTful desenvolvida durante o estágio, implementando conceitos de arquitet
 - Swagger/OpenAPI
 - pnpm
 
-## Estrutura do Projeto
+## Estrutura do Projeto# API REST - Gerenciamento de Seleções Copa 2022
+
+API RESTful desenvolvida em Node.js com TypeScript, Express e Prisma ORM, seguindo princípios de arquitetura em camadas e boas práticas de desenvolvimento.
+
+## Tecnologias Utilizadas
+
+- Node.js
+- TypeScript
+- Express
+- Prisma ORM
+- PostgreSQL
+- JWT (jsonwebtoken)
+- Bcrypt
+- Swagger (documentação)
+
+## Descrição
+
+Esta API permite gerenciar seleções e jogadores da Copa do Mundo 2022, com sistema completo de autenticação JWT, refresh tokens e proteção de rotas. Implementa arquitetura em camadas (Repository → Service → Controller) para melhor organização e manutenibilidade.
+
+## Funcionalidades
+
+### Autenticação
+
+- **Registro de usuários** com hash de senha (bcrypt)
+- **Login** com validação de credenciais
+- **Refresh tokens** para renovação de access tokens
+- **Proteção de rotas** com middleware JWT
+- **Access tokens** com expiração de 15 minutos
+- **Refresh tokens** com expiração de 7 dias
+
+### Seleções
+
+- Listar todas as seleções
+- Buscar seleção por ID
+- Criar nova seleção (rota protegida)
+- Atualizar seleção (rota protegida)
+- Deletar seleção (rota protegida)
+
+### Jogadores
+
+- Listar todos os jogadores
+- Buscar jogador por ID
+- Criar novo jogador (rota protegida)
+- Atualizar jogador (rota protegida)
+- Deletar jogador (rota protegida)
+- Listar jogadores por seleção
+
+## Arquitetura
+
+### Camadas
 
 ```
 src/
