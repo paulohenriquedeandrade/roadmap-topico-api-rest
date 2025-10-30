@@ -9,9 +9,16 @@ import selecoesV2 from "./routes/v2/selecoes.js";
 import selecoesV3 from "./routes/v3/selecoes.js";
 import jogadoresV3 from "./routes/v3/jogadores.js";
 import auth from "./routes/v3/authRoutes.js";
+import cors from "cors";
 
 const app: Application = express();
 
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(logger);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
