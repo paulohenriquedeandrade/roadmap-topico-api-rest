@@ -16,7 +16,6 @@ class SelecaoService {
    * @async
    * @function listarTodas
    * @returns {Promise<Selecao[]>} Array com todas as seleções
-   * @throws {Error} Erro ao listar seleções
    */
   async listarTodas() {
     return await selecaoRepository.findAll();
