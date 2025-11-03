@@ -7,7 +7,9 @@
   "scripts": {
     "dev": "tsx watch server.ts",
     "start": "node dist/server.js",
-    "build": "tsc"
+    "build": "tsc",
+    "docs": "jsdoc -c jsdoc.json",
+    "docs:serve": "pnpm docs && npx http-server ./docs"
   },
   "keywords": [],
   "author": "",
