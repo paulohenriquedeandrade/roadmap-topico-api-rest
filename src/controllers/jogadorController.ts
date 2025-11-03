@@ -1,8 +1,25 @@
+/**
+ * Controller de Jogadores
+ * Gerencia operações HTTP para jogadores da Copa 2022
+ * @module controllers/jogadorController
+ */
 import { Request, Response } from "express";
 import { CreateJogador, UpdateJogador } from "../types/jogador.types.js";
 import jogadorService from "../services/jogadorService.js";
 import { NotFoundError } from "../errors/NotFoundError.js";
 
+/**
+ * Listar todos os jogadores
+ * @async
+ * @function listarTodos
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {Promise<void>} 200 - Lista de jogadores
+ * @throws {Error} 500 - Erro ao listar jogadores
+ * @example
+ * // GET v3/jogadores
+ * Response 200: [{ id: 1, nome: "Neymar", posicao: "Atacante", numeroCamisa: 10, selecaoId: 1 }]
+ */
 export const listarTodos = async (req: Request, res: Response) => {
   try {
     const jogadores = await jogadorService.listarTodos();
@@ -13,6 +30,19 @@ export const listarTodos = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Busca um jogador pelo ID
+ * @async
+ * @function buscarPorId
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {Promise<void>} 200 - Jogador encontrado
+ * @throws {NotFoundError} 404 - Jogador não encontrado
+ * @throws {Error} 500 - Erro ao buscar jogador
+ * @example
+ * // GET v3/jogadores/1
+ * Response 200: { id: 1, nome: "Neymar", posicao: "Atacante", numeroCamisa: 10, selecaoId: 1 }
+ */
 export const buscarPorId = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -27,6 +57,19 @@ export const buscarPorId = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Cria um novo jogador
+ * @async
+ * @function criar
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {Promise<void>} 201 - Jogador criado
+ * @throws {Error} 500 - Erro ao criar jogador
+ * @example
+ * // POST v3/jogadores
+ * Request body: { nome: "Neymar", posicao: "Atacante", numeroCamisa: 10, selecaoId: 1 }
+ * Response 201: { id: 1, nome: "Neymar", posicao: "Atacante", numeroCamisa: 10, selecaoId: 1 }
+ */
 export const criar = async (req: Request, res: Response) => {
   try {
     const { nome, posicao, numeroCamisa, selecaoId } =
@@ -45,6 +88,16 @@ export const criar = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Atualiza um jogador existente
+ * @async
+ * @function atualizar
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {Promise<void>} 200 - Jogador atualizado
+ * @throws {NotFoundError} 404 - Jogador não encontrado
+ * @throws {Error} 500 - Erro ao atualizar jogador
+ */
 export const atualizar = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -67,6 +120,15 @@ export const atualizar = async (req: Request, res: Response) => {
   }
 };
 
+/** * Deleta um jogador pelo ID
+ * @async
+ * @function deletar
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {Promise<void>} 200 - Jogador deletado
+ * @throws {NotFoundError} 404 - Jogador não encontrado
+ * @throws {Error} 500 - Erro ao deletar jogador
+ */
 export const deletar = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;

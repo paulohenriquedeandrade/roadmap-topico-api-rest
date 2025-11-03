@@ -1,8 +1,26 @@
+/**
+ * Controller de Seleções
+ * Gerencia operações HTTP para seleções da Copa 2022
+ * @module controllers/selecaoController
+ */
+
 import { Request, Response } from "express";
 import { CreateSelecao, UpdateSelecao } from "../types/selecao.types.js";
 import selecaoService from "../services/selecaoService.js";
 import { NotFoundError } from "../errors/NotFoundError.js";
 
+/**
+ * Lista todas seleções cadastradas
+ * @async
+ * @function listarTodas
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {Promise<void>} 200 - Lista de seleções
+ * @throws {Error} 500 - Erro ao listar seleções
+ * @example
+ * // GET v3/selecoes
+ * Response 200: [{ id: 1, nome: "Brasil", grupo: "G", titulos: 5 }]
+ */
 export const listarTodas = async (req: Request, res: Response) => {
   try {
     const selecoes = await selecaoService.listarTodas();
@@ -13,6 +31,19 @@ export const listarTodas = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Busca uma seleção pelo ID
+ * @async
+ * @function buscarPorId
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {Promise<void>} 200 - Seleção encontrada
+ * @throws {NotFoundError} 404 - Seleção não encontrada
+ * @throws {Error} 500 - Erro ao buscar seleção
+ * @example
+ * // GET v3/selecoes/1
+ * Response 200: { id: 1, nome: "Brasil", grupo: "G", titulos: 5 }
+ */
 export const buscarPorId = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -27,6 +58,19 @@ export const buscarPorId = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Cria uma nova seleção
+ * @async
+ * @function criar
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {Promise<void>} 201 - Seleção criada
+ * @throws {Error} 500 - Erro ao criar seleção
+ * @example
+ * // POST v3/selecoes
+ * Request body: { nome: "Brasil", grupo: "G", titulos: 5 }
+ * Response 201: { id: 1, nome: "Brasil", grupo: "G", titulos: 5 }
+ */
 export const criar = async (req: Request, res: Response) => {
   try {
     const { nome, grupo, titulos } = req.body as CreateSelecao;
@@ -43,6 +87,16 @@ export const criar = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Atualiza uma seleção existente
+ * @async
+ * @function atualizar
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {Promise<void>} 200 - Seleção atualizada
+ * @throws {NotFoundError} 404 - Seleção não encontrada
+ * @throws {Error} 500 - Erro ao atualizar seleção
+ */
 export const atualizar = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -63,6 +117,16 @@ export const atualizar = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Deleta uma seleção pelo ID
+ * @async
+ * @function deletar
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {Promise<void>} 200 - Seleção deletada
+ * @throws {NotFoundError} 404 - Seleção não encontrada
+ * @throws {Error} 500 - Erro ao deletar seleção
+ */
 export const deletar = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;

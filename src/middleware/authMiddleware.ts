@@ -1,3 +1,8 @@
+/**
+ * Middleware de autenticação
+ * Verifica se o token JWT está presente e é válido.
+ * @module middleware/authMiddleware
+ */
 import { Request, Response, NextFunction } from "express";
 import { verifyAccessToken } from "../utils/jwt.js";
 
@@ -12,6 +17,14 @@ declare global {
   }
 }
 
+/**
+ * @function authMiddleware
+ * @param {Request} req
+ * @param {Response} res
+ * @param {NextFunction} next
+ * @returns {void}
+ * @throws {401} 401 - Se o token não for fornecido ou for inválido.
+ */
 export const authMiddleware = (
   req: Request,
   res: Response,

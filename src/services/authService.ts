@@ -1,3 +1,8 @@
+/**
+ * Service de autenticação
+ * Contém a lógica de negócio para registro, login e renovação de tokens
+ * @module services/authService
+ */
 import bcrypt from "bcryptjs";
 import userRepository from "../repositories/userRepository.js";
 import {
@@ -13,6 +18,12 @@ import {
 } from "../utils/jwt.js";
 
 class AuthService {
+  /**
+   * @async
+   * @function register
+   * @param {RegisterInput} data - Dados para registro
+   * @returns {Promise<AuthResponse>} Resposta de autenticação com tokens e dados do usuário
+   */
   async register(data: RegisterInput): Promise<AuthResponse> {
     const existingUser = await userRepository.findByEmail(data.email);
     if (existingUser) {
@@ -43,6 +54,13 @@ class AuthService {
     };
   }
 
+  /**
+   * Realiza o login do usuário
+   * @async
+   * @function login
+   * @param {LoginInput} data - Dados para login
+   * @returns {Promise<AuthResponse>} Resposta de autenticação com tokens e dados do usuário
+   */
   async login(data: LoginInput): Promise<AuthResponse> {
     const user = await userRepository.findByEmail(data.email);
     if (!user) {
@@ -71,6 +89,13 @@ class AuthService {
     };
   }
 
+  /**
+   * Renova o token de acesso usando o token de refresh
+   * @async
+   * @function refreshAccessToken
+   * @param {string} token - Token de refresh
+   * @returns {Promise<{ accessToken: string }>} Novo token de acesso
+   */
   async refreshAccessToken(token: string): Promise<{ accessToken: string }> {
     const decoded = verifyRefreshToken(token);
     if (!decoded) {
